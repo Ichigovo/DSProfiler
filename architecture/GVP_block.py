@@ -424,7 +424,7 @@ class GVPClassifier(nn.Module):
             edge_index = data.edge_index
             h_E = (data.edge_s, data.edge_v)
             batch = data.batch
-        else:  # 单个图模式
+        else:  
             node_s_37dim = data['node_s'][:, :37]
             h_V = (node_s_37dim, data['node_v'])
             edge_index = data['edge_index']
