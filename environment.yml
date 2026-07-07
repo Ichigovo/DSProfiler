@@ -1,0 +1,33 @@
+name: dsprofiler
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - openbabel=3.1.1
+  - pip
+  - python=3.9
+  - reduce=4.14
+  - pip:
+    - --extra-index-url https://download.pytorch.org/whl/cu118
+    - --find-links https://data.pyg.org/whl/torch-2.6.0+cu118.html
+    - biopython==1.85
+    - freesasa==2.2.1
+    - matplotlib==3.9.4
+    - mdanalysis==2.7.0
+    - networkx==3.2.1
+    - numpy==1.26.4
+    - pandas==2.3.3
+    - pillow==11.3.0
+    - rdkit==2025.3.6
+    - scikit-learn==1.6.1
+    - scipy==1.13.1
+    - seaborn==0.13.2
+    - torch==2.6.0+cu118
+    - torch-cluster==1.6.3+pt26cu118
+    - torch-geometric==2.6.1
+    - torch-scatter==2.1.2+pt26cu118
+    - torch-sparse==0.6.18+pt26cu118
+    - torchaudio==2.6.0+cu118
+    - torchvision==0.21.0+cu118
+    - tqdm==4.67.1
