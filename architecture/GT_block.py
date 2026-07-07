@@ -39,7 +39,6 @@ class MultiHeadAttentionLayer(nn.Module):
         self.use_formula_attention = use_formula_attention 
         self.dropout_rate = dropout_rate 
         
-        # Define node features' query, key, and value tensors, and define edge features' projection tensors
         self.Q = nn.Linear(num_input_feats, self.num_output_feats * self.num_heads, bias=using_bias)
         self.K = nn.Linear(num_input_feats, self.num_output_feats * self.num_heads, bias=using_bias)
         self.V = nn.Linear(num_input_feats, self.num_output_feats * self.num_heads, bias=using_bias)
@@ -134,7 +133,6 @@ class GraphTransformerModule(nn.Module):
             ):
         super(GraphTransformerModule, self).__init__()
         
-        # Record parameters given
         self.activ_fn = activ_fn
         self.residual = residual
         self.num_attention_heads = num_attention_heads
@@ -149,7 +147,7 @@ class GraphTransformerModule(nn.Module):
         if self.apply_layer_norm:
             self.layer_norm1_node_feats = nn.LayerNorm(self.num_output_feats)
             self.layer_norm1_edge_feats = nn.LayerNorm(self.num_output_feats)
-        else:  # Otherwise, default to using batch normalization
+        else: 
             self.batch_norm1_node_feats = nn.BatchNorm1d(self.num_output_feats)
             self.batch_norm1_edge_feats = nn.BatchNorm1d(self.num_output_feats)
         
@@ -165,7 +163,6 @@ class GraphTransformerModule(nn.Module):
         self.O_node_feats = nn.Linear(self.num_output_feats, self.num_output_feats)
         self.O_edge_feats = nn.Linear(self.num_output_feats, self.num_output_feats)
         
-        # MLP for node features 
         dropout = nn.Dropout(p=self.dropout_rate) if self.dropout_rate > 0.0 else nn.Identity()
         self.node_feats_MLP = nn.ModuleList([
             nn.Linear(self.num_output_feats, self.num_output_feats * 2, bias=False),
@@ -177,11 +174,10 @@ class GraphTransformerModule(nn.Module):
         if self.apply_layer_norm:
             self.layer_norm2_node_feats = nn.LayerNorm(self.num_output_feats)
             self.layer_norm2_edge_feats = nn.LayerNorm(self.num_output_feats)
-        else:  # Otherwise, default to using batch normalization
+        else: 
             self.batch_norm2_node_feats = nn.BatchNorm1d(self.num_output_feats)
             self.batch_norm2_edge_feats = nn.BatchNorm1d(self.num_output_feats)
         
-        # MLP for edge features 
         self.edge_feats_MLP = nn.ModuleList([
             nn.Linear(self.num_output_feats, self.num_output_feats * 2, bias=False),
             self.activ_fn,
@@ -222,7 +218,6 @@ class GraphTransformerModule(nn.Module):
         node_feats_in1 = node_feats
         edge_feats_in1 = edge_feats
             
-        # Apply first round of normalization 
         if self.apply_layer_norm:
             node_feats = self.layer_norm1_node_feats(node_feats)
             edge_feats = self.layer_norm1_edge_feats(edge_feats)
@@ -230,7 +225,6 @@ class GraphTransformerModule(nn.Module):
             node_feats = self.batch_norm1_node_feats(node_feats)
             edge_feats = self.batch_norm1_edge_feats(edge_feats)
         
-        # Get multi-head attention output
         node_attn_out, edge_attn_out = self.mha_module(node_feats, edge_feats, edge_index)
         
         node_feats = node_attn_out.view(-1, self.num_output_feats)
@@ -242,7 +236,6 @@ class GraphTransformerModule(nn.Module):
         node_feats = self.O_node_feats(node_feats)
         edge_feats = self.O_edge_feats(edge_feats)
         
-        # Make first residual connection 
         if self.residual:
             node_feats = node_feats_in1 + node_feats
             edge_feats = edge_feats_in1 + edge_feats
@@ -250,7 +243,6 @@ class GraphTransformerModule(nn.Module):
         node_feats_in2 = node_feats
         edge_feats_in2 = edge_feats
         
-        # Apply second round of normalization 
         if self.apply_layer_norm:
             node_feats = self.layer_norm2_node_feats(node_feats)
             edge_feats = self.layer_norm2_edge_feats(edge_feats)
@@ -258,13 +250,11 @@ class GraphTransformerModule(nn.Module):
             node_feats = self.batch_norm2_node_feats(node_feats)
             edge_feats = self.batch_norm2_edge_feats(edge_feats)
         
-        # Apply MLPs for node and edge features 
         for layer in self.node_feats_MLP:
             node_feats = layer(node_feats)
         for layer in self.edge_feats_MLP:
             edge_feats = layer(edge_feats)
         
-        # Make second residual connection 
         if self.residual:
             node_feats = node_feats_in2 + node_feats
             edge_feats = edge_feats_in2 + edge_feats
@@ -410,7 +400,6 @@ class GraphTransformer(nn.Module):
             ):
         super(GraphTransformer, self).__init__()
         
-        # Initialize model parameters
         self.activ_fn = activ_fn
         self.transformer_residual = transformer_residual
         self.num_attention_heads = num_attention_heads
@@ -496,7 +485,6 @@ class GTClassifier(nn.Module):
             use_gradient_checkpointing=use_gradient_checkpointing
         )
         
-        # 全局池化
         self.global_pool = AtomGlobalPooling(num_hidden_channels)
 
         self.output_mlp = nn.Sequential(
