@@ -1,5 +1,5 @@
 # DSProfiler: A Dual-Scale Graph Neural Network for Druggable Site Evaluation and Selection
-![](./DSProfiler.jpg)
+![](./DSProfiler.png)
 ## Contents
 - [Overview](#overview)
 - [Installation](#installation)
