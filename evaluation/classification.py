@@ -3,8 +3,7 @@ import numpy as np
 from sklearn.metrics import (
     accuracy_score, f1_score, matthews_corrcoef,
     precision_score, recall_score, roc_auc_score,
-    confusion_matrix, average_precision_score,
-    precision_recall_curve, auc
+    confusion_matrix, average_precision_score
 )
 
 # 读取数据
@@ -16,8 +15,7 @@ scores = df['score'].values
 threshold = 0.5
 preds = (scores >= threshold).astype(int)
 
-precision, recall, _ = precision_recall_curve(targets, scores)
-auprc = auc(recall, precision)
+auprc = average_precision_score(targets, scores)
 
 metrics = {
     'accuracy': accuracy_score(targets, preds),
