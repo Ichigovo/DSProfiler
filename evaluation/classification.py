@@ -6,7 +6,6 @@ from sklearn.metrics import (
     confusion_matrix, average_precision_score
 )
 
-# 读取数据
 df = pd.read_csv('./example/score/example_results.csv')
     
 targets = df['label'].values
@@ -28,7 +27,6 @@ metrics = {
     'confusion_matrix': confusion_matrix(targets, preds).tolist()
 }
 
-# 输出结果
 print("\n" + "="*50)
 print("Model Evaluation Metrics:")
 print("="*50)
